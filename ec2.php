@@ -31,8 +31,11 @@ switch ($command) {
     case 'list':
         $aws->viewLists();
         break;
+    case 'list_host':
+        $aws->viewHosts();
+        break;
     case 'launch_ec2':
-        $aws->launchEC2();
+        $aws->launchEC2($param1);
         break;
     case 'start_ec2':
         $aws->startEC2($param1);
@@ -60,7 +63,8 @@ class ManageAWS{
         'InstanceType'     => 't1.micro',
         'SecurityGroupId'  => 'sg-fd88fcfc',
     );
-    public $ec2ImageName = 'ami-5769ed56';
+    //EC2インスタンスイメージ
+    public $ec2ImageName = 'ami-c16aeec0';
     
     //インスタンスの一覧表示
     public function viewLists(){
@@ -69,9 +73,23 @@ class ManageAWS{
         $ret = $ec2->describe_instances();
         if (!empty($ret->body->reservationSet->item)) {
             foreach ($ret->body->reservationSet->item as $item) {
-                //print_r($item->instancesSet->item);
                 $itemInfo = $item->instancesSet->item;
-                printf("[%s] ID %s / Status %s" . PHP_EOL, $region, $itemInfo->instanceId, $itemInfo->instanceState->name);
+                printf("[%s] ID %s / Host %s / Status %s" . PHP_EOL, $region, $itemInfo->instanceId, $itemInfo->dnsName, $itemInfo->instanceState->name);
+            }
+        }
+    }
+    
+    //インスタンスの一覧表示
+    public function viewHosts(){
+        $ec2 = new AmazonEC2();
+        $ec2->set_region($this->region);
+        $ret = $ec2->describe_instances();
+        if (!empty($ret->body->reservationSet->item)) {
+            foreach ($ret->body->reservationSet->item as $item) {
+                $itemInfo = $item->instancesSet->item;
+                if($itemInfo->instanceState->name == 'running'){
+                    printf("%s" . PHP_EOL, $itemInfo->dnsName);
+                }
             }
         }
     }
@@ -94,14 +112,18 @@ class ManageAWS{
     }
     
     //インスタンスの新規作成
-    public function launchEC2(){
+    public function launchEC2($num = 1){
         $ec2 = new AmazonEC2();
         $ec2->set_region($this->region);
-        $response = $ec2->run_instances($this->ec2ImageName, 1, 1, $this->ec2Options);
-        if($response->isOK()){
-            echo 'launch EC2 OK' . PHP_EOL;
-        }else{
-            echo 'launch EC2 Error : ' . $response->body->Errors->Error->Message . PHP_EOL;
+        
+        for($i = 0; $i < $num; $i++){
+            $response = $ec2->run_instances($this->ec2ImageName, 1, 1, $this->ec2Options);
+            if($response->isOK()){
+                echo 'launch EC2 OK' . PHP_EOL;
+            }else{
+                echo 'launch EC2 Error : ' . $response->body->Errors->Error->Message . PHP_EOL;
+            }
+            sleep(3);
         }
     }
     
