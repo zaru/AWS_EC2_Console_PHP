@@ -6,7 +6,7 @@
  *
  * list                         インスタンスの一覧表示
  * list_host                    インスタンスのHOST名一覧表示
- * launch_ec2                   EC2インスタンスを新規作成
+ * launch_ec2 作成数             EC2インスタンスを新規作成
  * start_ec2 インスタンスID      指定インスタンスを起動
  * stop_ec2 インスタンスID       指定インスタンスを停止
  * start_ec2_all                すべてのインスタンスを起動
