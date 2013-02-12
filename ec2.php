@@ -89,10 +89,11 @@ class ManageAWS{
         $ret = $ec2->describe_instances();
         if (!empty($ret->body->reservationSet->item)) {
             foreach ($ret->body->reservationSet->item as $item) {
-                $itemInfo = $item->instancesSet->item;
-                if($itemInfo->instanceState->name == 'running'){
-                    printf("%s" . PHP_EOL, $itemInfo->dnsName);
-                }
+				foreach($item->instancesSet->item as $itemInfo){
+                	if($itemInfo->instanceState->name == 'running'){
+                   		printf("%s" . PHP_EOL, $itemInfo->dnsName);
+                	}
+				}
             }
         }
     }
@@ -106,8 +107,9 @@ class ManageAWS{
         $lists = array();
         if (!empty($ret->body->reservationSet->item)) {
             foreach ($ret->body->reservationSet->item as $item) {
-                $itemInfo = $item->instancesSet->item;
-                $lists[] = $itemInfo->instanceId;
+				foreach($item->instancesSet->item as $itemInfo){
+                	$lists[] = $itemInfo->instanceId;
+				}
             }
         }
         
