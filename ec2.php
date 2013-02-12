@@ -74,10 +74,9 @@ class ManageAWS{
         $ret = $ec2->describe_instances();
         if (!empty($ret->body->reservationSet->item)) {
             foreach ($ret->body->reservationSet->item as $item) {
-                //$itemInfo = $item->instancesSet->item;
-				foreach($item->instancesSet->item as $itemInfo){
-                	printf("[%s] ID %s / Host %s / Status %s" . PHP_EOL, $this->region, $itemInfo->instanceId, $itemInfo->dnsName, $itemInfo->instanceState->name);
-				}
+                foreach($item->instancesSet->item as $itemInfo){
+                    printf("[%s] ID %s / Host %s / Status %s" . PHP_EOL, $this->region, $itemInfo->instanceId, $itemInfo->dnsName, $itemInfo->instanceState->name);
+                }
             }
         }
     }
@@ -89,11 +88,11 @@ class ManageAWS{
         $ret = $ec2->describe_instances();
         if (!empty($ret->body->reservationSet->item)) {
             foreach ($ret->body->reservationSet->item as $item) {
-				foreach($item->instancesSet->item as $itemInfo){
-                	if($itemInfo->instanceState->name == 'running'){
-                   		printf("%s" . PHP_EOL, $itemInfo->dnsName);
-                	}
-				}
+                foreach($item->instancesSet->item as $itemInfo){
+                    if($itemInfo->instanceState->name == 'running'){
+                        printf("%s" . PHP_EOL, $itemInfo->dnsName);
+                    }
+                }
             }
         }
     }
@@ -107,9 +106,9 @@ class ManageAWS{
         $lists = array();
         if (!empty($ret->body->reservationSet->item)) {
             foreach ($ret->body->reservationSet->item as $item) {
-				foreach($item->instancesSet->item as $itemInfo){
-                	$lists[] = $itemInfo->instanceId;
-				}
+                foreach($item->instancesSet->item as $itemInfo){
+                    $lists[] = $itemInfo->instanceId;
+                }
             }
         }
         
