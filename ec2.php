@@ -74,8 +74,10 @@ class ManageAWS{
         $ret = $ec2->describe_instances();
         if (!empty($ret->body->reservationSet->item)) {
             foreach ($ret->body->reservationSet->item as $item) {
-                $itemInfo = $item->instancesSet->item;
-                printf("[%s] ID %s / Host %s / Status %s" . PHP_EOL, $region, $itemInfo->instanceId, $itemInfo->dnsName, $itemInfo->instanceState->name);
+                //$itemInfo = $item->instancesSet->item;
+				foreach($item->instancesSet->item as $itemInfo){
+                	printf("[%s] ID %s / Host %s / Status %s" . PHP_EOL, $this->region, $itemInfo->instanceId, $itemInfo->dnsName, $itemInfo->instanceState->name);
+				}
             }
         }
     }
